@@ -23,8 +23,8 @@ app.use("/api/movies",movieRoutes);
 
 
 mongoose.connect(process.env.MONGO_URI)
-.then(()=>console.log("Mongo DB connected"))
-.catch(err => console.log(err))
+.then(() => console.log("MongoDB connected ✔"))
+.catch(err => console.log("MongoDB ERROR ❌", err));
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, ()=>{
