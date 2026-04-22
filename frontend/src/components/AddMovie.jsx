@@ -44,6 +44,9 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
             setTitle("");
             setDescription("");
             setPosterUrl("");
+        })
+        .catch(err => {
+            console.log("Add Movie Error ❌", err);
         });
     }
 };
