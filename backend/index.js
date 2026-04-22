@@ -22,9 +22,13 @@ app.get("/",(req,res)=>{
 app.use("/api/movies",movieRoutes);
 
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, {
+  serverSelectionTimeoutMS: 30000,
+  socketTimeoutMS: 45000
+})
 .then(() => console.log("MongoDB connected ✔"))
-.catch(err => console.log("MongoDB ERROR ❌", err));
+.catch(err => console.log("MongoDB ERROR ❌", err.message));
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, ()=>{
