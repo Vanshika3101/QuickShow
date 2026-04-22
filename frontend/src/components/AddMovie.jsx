@@ -17,7 +17,7 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
     const addMovie = () => {
         if(editMovie){
             //update 
-            axios.put(`http://quickshow-backend-pd1e.onrender.com/api/movies/update/${editMovie._id}`, {
+            axios.put(`https://quickshow-backend-pd1e.onrender.com/api/movies/update/${editMovie._id}`, {
                 title,
                 description,
                 posterUrl
@@ -32,7 +32,7 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
                 setPosterUrl("");
             })
         }else{
-        axios.post("http://quickshow-backend-pd1e.onrender.com/api/movies/add", {
+        axios.post("https://quickshow-backend-pd1e.onrender.com/api/movies/add", {
             title,
             description,
             posterUrl
