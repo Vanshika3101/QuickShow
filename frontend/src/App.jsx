@@ -7,11 +7,14 @@ function App(){
   const [movies, setMovies] = useState([]);
   const [editMovie, setEditMovie] = useState(null);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
   
   const fetchMovies = () => {
+    setLoading(true);
     axios.get("https://quickshow-jn4r.onrender.com/api/movies")
     .then(res => setMovies(res.data))
-    .catch(err => console.log(err));
+    .catch(err => console.log(err))
+    .finally(() => setLoading(false));
   }
 
   const deleteMovie = (id) => {
@@ -54,21 +57,21 @@ function App(){
 
       <hr />
 
-
-      {filteredMovies.length > 0 ? (
-        filteredMovies.map((movie) => (
-          <MovieCard
-            key={movie._id}
-            movie={movie}
-            setEditMovie={setEditMovie}
-            deleteMovie={deleteMovie}
-          />
-          ))
-        ) : (
-          <p style={{ marginTop: "20px" }}>
-            🎥 No movies found
-          </p>
-        )}
+      {loading ? (
+      <p>⏳ Loading movies...</p>
+    ) : filteredMovies.length > 0 ? (
+      filteredMovies.map((movie) => (
+        <MovieCard
+          key={movie._id}
+          movie={movie}
+          setEditMovie={setEditMovie}
+          deleteMovie={deleteMovie}
+        />
+      ))
+    ) : (
+      <p>🎥 No movies found</p>
+    )}
+    
     </div>
   );
 }
