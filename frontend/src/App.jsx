@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios"
 import AddMovie from "./components/AddMovie";
+import MovieCard from "./components/MovieCard";
 
 function App(){
   const [movies, setMovies] = useState([]);
   const [editMovie, setEditMovie] = useState(null);
+  const [search, setSearch] = useState("");
   
   const fetchMovies = () => {
     axios.get("https://quickshow-jn4r.onrender.com/api/movies")
@@ -24,6 +26,10 @@ function App(){
     fetchMovies();
   }, []);
 
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div >
       <h1>🎬 QuickShow</h1>
@@ -32,44 +38,37 @@ function App(){
       fetchMovies = {fetchMovies}
       editMovie = {editMovie}
       setEditMovie = {setEditMovie}
+      />
 
+      <input 
+      type="text" 
+      placeholder = "🔍 Search movies..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      style={{
+        padding: "8px",
+        marginBottom: "15px",
+        width: "250px"
+      }}
       />
 
       <hr />
 
-     <div style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-      gap: "20px",
-      marginTop: "20px"
-    }}>
-      {movies.map((movie, index) => (
-          
-        <div
-          key={index}
-          style={{
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            padding: "10px"
-          }}
-        >
-          <img 
-          src= {movie.posterUrl}
-          alt= {movie.title}
-          style={{
-            width:"100%",
-            height:"200px",
-            objectFit:"contain",
-            borderRadius:"8px"
-          }}
+
+      {filteredMovies.length > 0 ? (
+        filteredMovies.map((movie) => (
+          <MovieCard
+            key={movie._id}
+            movie={movie}
+            setEditMovie={setEditMovie}
+            deleteMovie={deleteMovie}
           />
-          <h2>🎬 {movie.title}</h2>
-          <p>{movie.description}</p>
-          <button onClick={() => setEditMovie(movie)}>Edit✏️</button>
-          <button onClick={()=> deleteMovie(movie._id)}>Delete❌</button>
-        </div>
-      ))}
-    </div>
+          ))
+        ) : (
+          <p style={{ marginTop: "20px" }}>
+            🎥 No movies found
+          </p>
+        )}
     </div>
   );
 }
