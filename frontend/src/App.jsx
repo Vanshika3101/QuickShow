@@ -7,13 +7,13 @@ function App(){
   const [editMovie, setEditMovie] = useState(null);
   
   const fetchMovies = () => {
-    axios.get("https://quickshow-backend-pd1e.onrender.com/api/movies")
+    axios.get("https://quickshow-jn4r.onrender.com/api/movies")
     .then(res => setMovies(res.data))
     .catch(err => console.log(err));
   }
 
   const deleteMovie = (id) => {
-    axios.delete(`https://quickshow-backend-pd1e.onrender.com/api/movies/delete/${id}`)
+    axios.delete(`https://quickshow-jn4r.onrender.com/api/movies/delete/${id}`)
     .then(() => {
       fetchMovies(); //refresh list
     })
