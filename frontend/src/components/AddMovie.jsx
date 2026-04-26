@@ -55,7 +55,6 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
         }
 
         if(editMovie){
-            //update 
             await axios.put(`https://quickshow-jn4r.onrender.com/api/movies/update/${editMovie._id}`, {
                 title,
                 description,

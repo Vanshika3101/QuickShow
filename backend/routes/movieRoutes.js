@@ -10,7 +10,6 @@ router.get("/",async(req,res)=>{
     res.json(movies);
 })
 
-//get single movie
 router.get("/:id",async(req,res) => {
     try{
         const movie = await Movie.findById(req.params.id);

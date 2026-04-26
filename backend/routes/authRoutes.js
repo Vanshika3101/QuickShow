@@ -6,19 +6,16 @@ const bcrypt = require("bcryptjs");
 
 const SECRET = process.env.JWT_SECRET;
 
-//SignUp
 router.post("/signup", async(req, res) => {
     try{
         const {email,password} = req.body;
 
-        //validation
         if(!email || !password){
             return res.status(400).json({
                 message:"All fields required"
             });
         }
 
-        //check existing user
         const existingUser = await User.findOne({email});
         if(existingUser){
             return res.status(400).json({
@@ -40,7 +37,7 @@ router.post("/signup", async(req, res) => {
     }
 });
 
-//Login + Token
+
 router.post("/login", async(req,res) => {
     try{
         const {email,password} = req.body;
@@ -58,7 +55,7 @@ router.post("/login", async(req,res) => {
             });
         }
 
-        //token
+
         const token = jwt.sign(
             {id : user._id},
             SECRET,
