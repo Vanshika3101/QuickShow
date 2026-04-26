@@ -11,7 +11,7 @@ router.get("/", auth, async(req,res)=>{
 })
 
 //get single movie
-router.get("/:id", auth, async(req,res) => {
+router.get("/:id",async(req,res) => {
     try{
         const movie = await Movie.findById(req.params.id);
         if(!movie){
@@ -101,7 +101,7 @@ router.delete("/delete/:id", auth, async(req,res) => {
         if (movie.userId.toString() !== req.user.id) {
         return res.status(403).json({ message: "Not allowed" });
         }
-        
+
         await Movie.findByIdAndDelete(req.params.id);
         res.json({message: "Movie Deletedddd ❌"});
     }catch(err){
