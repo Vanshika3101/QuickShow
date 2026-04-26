@@ -7,8 +7,8 @@ import AddMovie from "./components/AddMovie";
 import MovieCard from "./components/MovieCard";
 import {Routes, Route} from "react-router-dom"
 import MovieDetail from "./components/MovieDetail";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
+import Signup from "./components/SignUp"
+import Login from "./components/Login"
 import "./styles.css";
 
 function App(){
