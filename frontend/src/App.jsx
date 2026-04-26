@@ -6,6 +6,8 @@ import AddMovie from "./components/AddMovie";
 import MovieCard from "./components/MovieCard";
 import {Routes, Route} from "react-router-dom"
 import MovieDetail from "./components/MovieDetail";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
 import "./styles.css";
 
 function App(){
@@ -43,17 +45,17 @@ function App(){
     fetchMovies();
   }, []);
 
-  //search filter
+ 
   let filteredMovies = movies.filter((movie) =>
     movie.title.toLowerCase().includes(search.toLowerCase())
   );
 
-  //favorite filter
+ 
   if(showFav){
     filteredMovies = filteredMovies.filter((m) => m.isFavorite);
   }
 
-  //sorted movies
+  
   const sortedMovies = [...filteredMovies].sort((a,b)=>{
     if(sortType === "az"){
       return a.title.localeCompare(b.title);
@@ -87,6 +89,8 @@ function App(){
     <ToastContainer position="top-right" autoClose={2000} />
 
     <Routes>
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/login" element={<Login />} />
       <Route
         path="/" 
         element = {
@@ -99,7 +103,7 @@ function App(){
             setEditMovie={setEditMovie}
           />
           
-          <br />
+          <br /> <br />
 
           <input 
           type="text" 
@@ -113,7 +117,7 @@ function App(){
           }}
           />
           
-       //sort movies
+      
       <select 
         value={sortType}
         onChange={(e) => setSortType(e.target.value)}
@@ -123,7 +127,7 @@ function App(){
         <option value="za">Z-A</option>
       </select>
 
-      //favorite button
+
       <button onClick={() => setShowFav(!showFav)}>
         {showFav ? "Show All 🎬" : "Show Favorites ❤️"}
       </button>
