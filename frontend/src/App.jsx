@@ -100,7 +100,7 @@ function App(){
           />
           
           <br />
-          
+
           <input 
           type="text" 
           placeholder = "🔍 Search movies..."
@@ -146,7 +146,7 @@ function App(){
     />
 
     <Route 
-    path="/movie/:id"
+    path="/movies/:id"
     element={<MovieDetail/>} 
     />
   </Routes>
