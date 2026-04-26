@@ -2,25 +2,27 @@ const express = require("express");
 const cors = require ("cors");
 const mongoose = require ("mongoose")
 require("dotenv").config();
+
 const movieRoutes = require("./routes/movieRoutes")
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
 const corsOptions = {
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type"]
+  allowedHeaders: ["Content-Type", "Authorization"]
 };
-app.use(cors(corsOptions));
 
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get("/",(req,res)=>{
     res.send("Quick Show is running");
 })
 
-app.use("/api/movies",movieRoutes);
-
+app.use("/api/movies", movieRoutes);
+app.use("/api/auth", authRoutes);
 
 mongoose.connect(process.env.MONGO_URI, {
   serverSelectionTimeoutMS: 30000,

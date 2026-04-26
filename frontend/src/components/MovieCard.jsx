@@ -1,30 +1,29 @@
+import { useNavigate } from "react-router-dom";
 
-function MovieCard({movie, setEditMovie, deleteMovie}){
+function MovieCard({movie, setEditMovie, deleteMovie, toggleFavorite}){
+    const navigate = useNavigate();
+
     return(
-        <div
-      style={{
-        border: "1px solid #ccc",
-        borderRadius: "10px",
-        padding: "10px",
-        background: "#fff"
-      }}
-    >
+      <div className = "movie-card">
       <img
         src={movie.posterUrl}
+        onClick={() => navigate(`/movie/${movie._id}`)}
         alt={movie.title}
-        style={{
-          width: "100%",
-          height: "200px",
-          objectFit: "cover",
-          borderRadius: "8px"
-        }}
+        className="movie-img"
       />
 
       <h2>🎬 {movie.title}</h2>
       <p>{movie.description}</p>
 
-      <button onClick = {()=> setEditMovie(movie)}>Edit ✏️</button>
-      <button onClick={() => deleteMovie(movie._id)}>Delete ❌</button>
+      <button 
+      className = "btn btn-edit"
+      onClick = {()=> setEditMovie(movie)}>Edit ✏️</button>
+      <button 
+      className = "btn btn-delete"
+      onClick={() => deleteMovie(movie._id)}>Delete ❌</button>
+      <button 
+      className = "btn"
+      onClick ={() => toggleFavorite(movie._id)}>{movie.isFavorite ? "❤️" : "🤍"}</button>
     </div>
     );
 } 

@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {toast} from "react-toastify";
 
 function AddMovie({fetchMovies, editMovie, setEditMovie }){
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [posterUrl, setPosterUrl] = useState("");
+    const [image, setImage] = useState(null);
+    const [preview, setPreview] = useState("");
+    const [uploading, setUploading] = useState(false);
+    const [error,setError] = useState("");
+
+    const token = localStorage.getItem("token");
 
     useEffect(()=> {
         if(editMovie){
@@ -14,14 +21,52 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
         }
     }, [editMovie]);
 
-    const addMovie = () => {
+    const uploadImage = async()=>{
+        try{
+            setUploading(true);
+            setError("");
+
+        const formData = new FormData();
+        formData.append("image", image);
+
+        const res = await axios.post(
+            "https://quickshow-jn4r.onrender.com/api/movies/upload",
+            formData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return res.data.url;
+        }catch(err){
+            setError("Image upload failed ❌");
+            return null;
+        }finally{
+            setUploading(false);
+        }
+    };
+
+    const addMovie = async () => {
+        let imageUrl = posterUrl;
+        if(image){
+            imageUrl = await uploadImage();
+            if(!imageUrl) return;
+        }
+
         if(editMovie){
             //update 
-            axios.put(`https://quickshow-jn4r.onrender.com/api/movies/update/${editMovie._id}`, {
+            await axios.put(`https://quickshow-jn4r.onrender.com/api/movies/update/${editMovie._id}`, {
                 title,
                 description,
-                posterUrl
-            })
+                posterUrl:imageUrl,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        )
             .then(() => {
                 console.log("Movie Updated 🎬")
                 setEditMovie(null);
@@ -29,16 +74,23 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
 
                 setTitle("");
                 setDescription("");
+                setImage(null);
+                setPreview("");
                 setPosterUrl("");
-            })
+            });
         }else{
-        axios.post("https://quickshow-jn4r.onrender.com/api/movies/add", {
+        await axios.post("https://quickshow-jn4r.onrender.com/api/movies/add", {
             title,
             description,
-            posterUrl
+            posterUrl:imageUrl
+        },{
+            headers:{
+            Authorization:`Bearer ${token}`,
+            },
         })
         .then(res => {
             console.log("Movie Added 🎬", res.data);
+            toast.success("Movie Added 🎬")
             fetchMovies();
 
             setTitle("");
@@ -47,6 +99,7 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
         })
         .catch(err => {
             console.log("Add Movie Error ❌", err);
+            toast.error("Failed to add movie ❌");
         });
     }
 };
@@ -81,6 +134,41 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
 
              <br /><br />
 
+            <input 
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+                const file = e.target.files[0];
+                setImage(file);
+
+                if(file){
+                    const url = URL.createObjectURL(file);
+                    setPreview(url);
+                }
+            }
+        }
+     />
+
+            <br /><br />
+
+            {preview && (
+                <img
+                src={preview}
+                alt="preview"
+                style={{
+                    width: "150px",
+                    height: "200px",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                    marginTop: "10px" 
+                }}
+                />
+            )}
+
+            {uploading && <p>⏳ Uploading image...</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            <br /><br />
+
             <button onClick={addMovie}>
                  {editMovie ? "Update Movie ✏️" : "Add Movie 🎬"}
             </button>
@@ -95,6 +183,7 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
                     Cancel ❌
                 </button>
             )}
+
         </div>
     );
 }
