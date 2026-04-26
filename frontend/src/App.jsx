@@ -99,6 +99,8 @@ function App(){
             setEditMovie={setEditMovie}
           />
           
+          <br />
+          
           <input 
           type="text" 
           placeholder = "🔍 Search movies..."
