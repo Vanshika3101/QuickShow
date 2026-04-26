@@ -1,5 +1,5 @@
 import {ToastContainer} from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import {toast} from "react-toastify"
 import { useEffect, useState } from "react";
 import axios from "axios"
 import AddMovie from "./components/AddMovie";
