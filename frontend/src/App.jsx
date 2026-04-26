@@ -9,7 +9,7 @@ import {Routes, Route} from "react-router-dom"
 import MovieDetail from "./components/MovieDetail";
 import Signup from "./components/SignUp"
 import Login from "./components/Login"
-import "./styles.css";
+import "./style.css";
 
 function App(){
   const [movies, setMovies] = useState([]);
