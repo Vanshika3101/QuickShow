@@ -34,6 +34,7 @@ router.post("/signup", async(req, res) => {
         });
 
         await user.save();
+        res.json({message:"User created"});
     }catch(err){
         res.status(500).json(err);
     }

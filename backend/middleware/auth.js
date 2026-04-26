@@ -21,7 +21,7 @@ function auth(req,res,next){
 
         const decoded = jwt.verify(token, SECRET);
 
-        req.user = jwt.decoded; //{id: ...}
+        req.user = decoded; //{id: ...}
 
         next();
       }

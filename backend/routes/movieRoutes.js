@@ -5,7 +5,7 @@ const auth = require("../middleware/auth");
 const upload = require("../middleware/upload");
 const cloudinary = require("../utils/cloudinary");
 
-router.get("/", auth, async(req,res)=>{
+router.get("/",async(req,res)=>{
     const movies = await Movie.find();
     res.json(movies);
 })
