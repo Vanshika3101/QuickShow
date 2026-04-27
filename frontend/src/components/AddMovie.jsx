@@ -131,7 +131,7 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
             onChange={(e) => setPosterUrl(e.target.value)}
             />
 
-             <br /><br />
+            <br /><br />
 
             <input 
             type="file"

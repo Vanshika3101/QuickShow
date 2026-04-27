@@ -27,12 +27,34 @@ function Login(){
 };
 
     return (
-        <div>
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
             <h2>Login 🔐</h2>
-            <input placeholder="Email" onChange={(e) => setEmail(e.target.value)} />
-            <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+            <input 
+            placeholder="Email" 
+            onChange={(e) => setEmail(e.target.value)}
+            style={{ display: "block", margin: "10px auto", padding: "8px" }}
+            />
 
-            <button onClick={loginUser}>Login</button>
+            <input
+            type="password"
+            placeholder="Password" 
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ display: "block", margin: "10px auto", padding: "8px" }}
+            />
+
+            <button style={{ cursor: "pointer", padding: "8px 20px" }}
+            onClick={loginUser}>Login</button>
+
+            
+            <p style={{ marginTop: "15px" }}>
+                Don't have an account?{" "}
+                <span 
+                onClick={() => navigate("/signup")} 
+                style={{ color: "blue", cursor: "pointer", textDecoration: "underline" }}
+                >
+                Sign Up
+                </span>
+            </p>
         </div>
     );
 }

@@ -117,7 +117,7 @@ function App(){
           }}
           />
           
-      <br />
+      <br /> <br />
 
       <select 
         value={sortType}
@@ -128,8 +128,8 @@ function App(){
         <option value="za">Z-A</option>
       </select>
 
-        <br /> 
-        
+        <br /> <br />
+
       <button onClick={() => setShowFav(!showFav)}>
         {showFav ? "Show All 🎬" : "Show Favorites ❤️"}
       </button>
