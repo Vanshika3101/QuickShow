@@ -79,7 +79,6 @@ router.put("/favorite/:id", auth, async(req,res)=>{
         return res.status(403).json({ message: "Not allowed" });
         }
 
-        //toggle
         movie.isFavorite = !movie.isFavorite;
         await movie.save();
         res.json(movie);

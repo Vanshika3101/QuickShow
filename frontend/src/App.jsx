@@ -69,7 +69,6 @@ function App(){
 
   const visibleMovies = sortedMovies.slice(0,visible);
   
-  //toggle favorite
   const togglefavorite = (id) => {
     const token = localStorage.getItem("token");
 
@@ -118,7 +117,8 @@ function App(){
           }}
           />
           
-      
+      <br />
+
       <select 
         value={sortType}
         onChange={(e) => setSortType(e.target.value)}
@@ -128,7 +128,8 @@ function App(){
         <option value="za">Z-A</option>
       </select>
 
-
+        <br /> 
+        
       <button onClick={() => setShowFav(!showFav)}>
         {showFav ? "Show All 🎬" : "Show Favorites ❤️"}
       </button>
