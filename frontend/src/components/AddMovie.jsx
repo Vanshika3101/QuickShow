@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {toast} from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 function AddMovie({fetchMovies, editMovie, setEditMovie }){
     const [title, setTitle] = useState("");
@@ -10,6 +11,7 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
     const [preview, setPreview] = useState("");
     const [uploading, setUploading] = useState(false);
     const [error,setError] = useState("");
+    const navigate = useNavigate();
 
     const token = localStorage.getItem("token");
 
@@ -48,26 +50,38 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
     };
 
     const addMovie = async () => {
+        if(!token){
+            toast.error("Please login first");
+            navigate("/login");
+            return;
+        }
+
+        if(!title.trim() || !description.trim()){
+            toast.error("Title and description are required");
+            return;
+        }
+
         let imageUrl = posterUrl;
         if(image){
             imageUrl = await uploadImage();
             if(!imageUrl) return;
         }
 
-        if(editMovie){
-            await axios.put(`https://quickshow-jn4r.onrender.com/api/movies/update/${editMovie._id}`, {
-                title,
-                description,
-                posterUrl:imageUrl,
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
+        try{
+            if(editMovie){
+                await axios.put(`https://quickshow-jn4r.onrender.com/api/movies/update/${editMovie._id}`, {
+                    title: title.trim(),
+                    description: description.trim(),
+                    posterUrl:imageUrl,
                 },
-            }
-        )
-            .then(() => {
-                console.log("Movie Updated 🎬")
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+                console.log("Movie Updated 🎬");
+                toast.success("Movie updated ✏️");
                 setEditMovie(null);
                 fetchMovies();
 
@@ -76,32 +90,32 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
                 setImage(null);
                 setPreview("");
                 setPosterUrl("");
-            });
-        }else{
-        await axios.post("https://quickshow-jn4r.onrender.com/api/movies/add", {
-            title,
-            description,
-            posterUrl:imageUrl
-        },{
-            headers:{
-            Authorization:`Bearer ${token}`,
-            },
-        })
-        .then(res => {
-            console.log("Movie Added 🎬", res.data);
-            toast.success("Movie Added 🎬")
-            fetchMovies();
+            }else{
+                const res = await axios.post("https://quickshow-jn4r.onrender.com/api/movies/add", {
+                    title: title.trim(),
+                    description: description.trim(),
+                    posterUrl:imageUrl
+                },{
+                    headers:{
+                    Authorization:`Bearer ${token}`,
+                    },
+                });
 
-            setTitle("");
-            setDescription("");
-            setPosterUrl("");
-        })
-        .catch(err => {
+                console.log("Movie Added 🎬", res.data);
+                toast.success("Movie Added 🎬");
+                fetchMovies();
+
+                setTitle("");
+                setDescription("");
+                setPosterUrl("");
+                setImage(null);
+                setPreview("");
+            }
+        }catch(err){
             console.log("Add Movie Error ❌", err);
-            toast.error("Failed to add movie ❌");
-        });
-    }
-};
+            toast.error(err.response?.data?.message || "Failed to add movie ❌");
+        }
+    };
 
     return (
         <div>
@@ -168,8 +182,8 @@ function AddMovie({fetchMovies, editMovie, setEditMovie }){
             {error && <p style={{ color: "red" }}>{error}</p>}
             <br /><br />
 
-            <button onClick={addMovie}>
-                 {editMovie ? "Update Movie ✏️" : "Add Movie 🎬"}
+            <button onClick={addMovie} disabled={uploading}>
+                 {uploading ? "Uploading..." : editMovie ? "Update Movie ✏️" : token ? "Add Movie 🎬" : "Login to Add Movie 🔐"}
             </button>
 
             {editMovie && (
