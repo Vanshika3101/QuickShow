@@ -8,6 +8,14 @@ const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught exception", err);
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled rejection", reason);
+});
+
 const corsOptions = {
   origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE"],
