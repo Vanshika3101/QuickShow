@@ -109,15 +109,29 @@ router.delete("/delete/:id", auth, async(req,res) => {
 
 router.post("/upload", upload.single("image"), async(req,res) => {
     try{
-        const result = await cloudinary.uploader.upload_stream(
-            {folder:"movies"},
-        (error,result) => {
-            if(error) return res.status(500).json(error);
-            res.json({url: result.secure_url});
+        if(!req.file){
+            return res.status(400).json({ message: "Image file is required" });
+        }
+
+        const imageUrl = await new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+                { folder: "movies" },
+                (error, result) => {
+                    if (error) {
+                        reject(error);
+                        return;
+                    }
+
+                    resolve(result.secure_url);
+                }
+            );
+
+            stream.end(req.file.buffer);
         });
-        result.end(req.file.buffer);
+
+        res.json({url: imageUrl});
     } catch(err){
-        res.status(500).json(err);
+        res.status(500).json({ message: "Image upload failed", error: err.message });
     }
 });
 module.exports = router;

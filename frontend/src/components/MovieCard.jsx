@@ -7,7 +7,7 @@ function MovieCard({movie, setEditMovie, deleteMovie, toggleFavorite}){
       <div className = "movie-card">
       <img
         src={movie.posterUrl}
-        onClick={() => navigate(`/movie/${movie._id}`)}
+        onClick={() => navigate(`/movies/${movie._id}`)}
         alt={movie.title}
         className="movie-img"
       />
