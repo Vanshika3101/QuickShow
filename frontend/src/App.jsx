@@ -3,12 +3,16 @@ import "react-toastify/dist/ReactToastify.css";
 import {toast} from "react-toastify"
 import { useEffect, useState } from "react";
 import axios from "axios"
-import AddMovie from "./components/AddMovie";
-import MovieCard from "./components/MovieCard";
 import {Routes, Route} from "react-router-dom"
 import MovieDetail from "./components/MovieDetail";
 import Signup from "./components/SignUp"
 import Login from "./components/Login"
+import Navbar from "./components/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute";
+import HomePage from "./pages/HomePage";
+import ShowtimesPage from "./pages/ShowtimesPage";
+import SelectSeatsPage from "./pages/SelectSeatsPage";
+import MyBookingsPage from "./pages/MyBookingsPage";
 import "./style.css";
 
 function App(){
@@ -18,8 +22,6 @@ function App(){
   const [loading, setLoading] = useState(false);
   const [showFav, setShowFav] = useState(false);
   const [sortType, setSortType] = useState("latest")
-  const [visible, setVisible] = useState(6);
-
   const fetchMovies = () => {
     setLoading(true);
     axios.get("https://quickshow-jn4r.onrender.com/api/movies")
@@ -47,28 +49,6 @@ function App(){
   }, []);
 
  
-  let filteredMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(search.toLowerCase())
-  );
-
- 
-  if(showFav){
-    filteredMovies = filteredMovies.filter((m) => m.isFavorite);
-  }
-
-  
-  const sortedMovies = [...filteredMovies].sort((a,b)=>{
-    if(sortType === "az"){
-      return a.title.localeCompare(b.title);
-    }
-    if(sortType === "za"){
-      return b.title.localeCompare(a.title);
-    }
-    return 0;
-  });
-
-  const visibleMovies = sortedMovies.slice(0,visible);
-  
   const togglefavorite = (id) => {
     const token = localStorage.getItem("token");
 
@@ -87,6 +67,7 @@ function App(){
   return (
     <>
     <ToastContainer position="top-right" autoClose={2000} />
+    <Navbar />
 
     <Routes>
       <Route path="/signup" element={<Signup />} />
@@ -94,66 +75,51 @@ function App(){
       <Route
         path="/" 
         element = {
-          <div>
-          <h1>🎬 QuickShow</h1>
-          
-          <AddMovie
+          <HomePage
+            movies={movies}
+            search={search}
+            setSearch={setSearch}
+            sortType={sortType}
+            setSortType={setSortType}
+            showFav={showFav}
+            setShowFav={setShowFav}
+            loading={loading}
             fetchMovies={fetchMovies}
             editMovie={editMovie}
             setEditMovie={setEditMovie}
+            deleteMovie={deleteMovie}
+            toggleFavorite={togglefavorite}
           />
-          
-          <br /> <br />
-
-          <input 
-          type="text" 
-          placeholder = "🔍 Search movies..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{
-          padding: "8px",
-          marginBottom: "15px",
-          width: "250px"
-          }}
-          />
-          
-      <br /> <br />
-
-      <select 
-        value={sortType}
-        onChange={(e) => setSortType(e.target.value)}
-      >
-        <option value="latest">Latest</option>
-        <option value="az">A-Z</option>
-        <option value="za">Z-A</option>
-      </select>
-
-        <br /> <br />
-
-      <button onClick={() => setShowFav(!showFav)}>
-        {showFav ? "Show All 🎬" : "Show Favorites ❤️"}
-      </button>
-
-       {loading ? (
-                <p>Loading...</p>
-              ) : (
-                visibleMovies.map((movie) => (
-                  <MovieCard
-                    key={movie._id}
-                    movie={movie}
-                    setEditMovie={setEditMovie}
-                    deleteMovie={deleteMovie}
-                    toggleFavorite={togglefavorite}
-                  />
-                ))
-              )}
-          </div>
         }
     />
 
     <Route 
     path="/movies/:id"
     element={<MovieDetail/>} 
+    />
+    <Route
+    path="/movies/:id/shows"
+    element={
+      <ProtectedRoute>
+        <ShowtimesPage />
+      </ProtectedRoute>
+    }
+    />
+    <Route
+    path="/book/:showId"
+    element={
+      <ProtectedRoute>
+        <SelectSeatsPage />
+      </ProtectedRoute>
+    }
+    />
+    <Route
+    path="/my-bookings"
+    element={
+      <ProtectedRoute>
+        <MyBookingsPage />
+      </ProtectedRoute>
+    }
     />
   </Routes>
   </>

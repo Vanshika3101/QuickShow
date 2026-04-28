@@ -5,6 +5,8 @@ require("dotenv").config();
 
 const movieRoutes = require("./routes/movieRoutes")
 const authRoutes = require("./routes/authRoutes");
+const showRoutes = require("./routes/showRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
 
 const app = express();
 
@@ -31,6 +33,8 @@ app.get("/",(req,res)=>{
 
 app.use("/api/movies", movieRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/shows", showRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 mongoose.connect(process.env.MONGO_URI, {
   serverSelectionTimeoutMS: 30000,
